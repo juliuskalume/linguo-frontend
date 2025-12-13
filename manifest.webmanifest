@@ -3,6 +3,7 @@
   "short_name": "Linguo",
   "description": "Instant translations with AI",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0b1220",
   "theme_color": "#3b82f6",
