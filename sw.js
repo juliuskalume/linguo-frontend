@@ -1,5 +1,5 @@
-const CACHE_NAME = "linguo-v1";
-const APP_SHELL = [
+const CACHE = "linguo-v1";
+const ASSETS = [
   "/",
   "/index.html",
   "/manifest.webmanifest",
@@ -9,36 +9,31 @@ const APP_SHELL = [
   "/icons/maskable-512.png"
 ];
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.map((k) => (k === CACHE_NAME ? null : caches.delete(k))))
+      Promise.all(keys.map((k) => (k === CACHE ? null : caches.delete(k))))
     )
   );
   self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  const url = new URL(req.url);
+self.addEventListener("fetch", (e) => {
+  const url = new URL(e.request.url);
 
-  // Don’t cache API calls to Render
-  if (url.pathname.startsWith("/api/") || url.hostname.includes("onrender.com")) {
-    event.respondWith(fetch(req));
+  // Always go network for Render API calls
+  if (url.hostname.includes("onrender.com")) {
+    e.respondWith(fetch(e.request));
     return;
   }
 
-  // Cache-first for static stuff
-  event.respondWith(
-    caches.match(req).then((cached) => cached || fetch(req).then((res) => {
-      const copy = res.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-      return res;
-    }).catch(() => cached))
+  // Cache-first for static app files
+  e.respondWith(
+    caches.match(e.request).then((cached) => cached || fetch(e.request))
   );
 });
