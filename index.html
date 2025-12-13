@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Linguo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+/* =========================================================
+   THEME TOKENS
+========================================================= */
+:root{
+  --bg: #0b1220;
+  --bg-alt:#0f172a;
+  --surface:#111c2e;
+  --surface-alt:#16253c;
+  --border:rgba(148,163,184,.22);
+  --border-strong:rgba(148,163,184,.32);
+
+  --text:#eaf0ff;
+  --text-muted:#a7b0c0;
+
+  --accent:#3b82f6;
+  --accent-soft:rgba(59,130,246,.16);
+
+  --danger:#f87171;
+  --success:#22c55e;
+
+  --radius:12px;
+  --radius-lg:18px;
+  --shadow: 0 18px 70px rgba(0,0,0,.35);
+  --shadow-soft: 0 10px 35px rgba(0,0,0,.22);
+}
+
+[data-theme="light"]{
+  --bg:#f3f4f6;
+  --bg-alt:#ffffff;
+  --surface:#ffffff;
+  --surface-alt:#f1f5f9;
+  --border:rgba(15,23,42,.14);
+  --border-strong:rgba(15,23,42,.20);
+
+  --text:#0f172a;
+  --text-muted:#475569;
+
+  --accent:#2563eb;
+  --accent-soft:rgba(37,99,235,.14);
+
+  --shadow: 0 18px 60px rgba(15,23,42,.12);
+  --shadow-soft: 0 10px 28px rgba(15,23,42,.10);
+}
+
+/* =========================================================
+   BASE
+========================================================= */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Inter", Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display:flex;
+  justify-content:center;
+  padding:16px;
+}
+
+[data-theme="dark"] body{
+  background: radial-gradient(circle at top, #1e293b 0%, #0b1220 48%, #000 100%);
+}
+
+/* =========================================================
+   APP SHELL + HEADER
+========================================================= */
+.app-shell{
+  width:100%;
+  max-width:1200px;
+  background: linear-gradient(145deg, var(--bg-alt), var(--bg));
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:16px 20px;
+  box-shadow: var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.logo-mark{
+  width:34px;height:34px;border-radius:999px;
+  background: conic-gradient(from 210deg, #3b82f6, #a855f7, #f97316, #3b82f6);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow: 0 10px 30px rgba(59,130,246,.25);
+}
+.logo-mark span{ color:#061022; font-weight:800; font-size:13px; }
+[data-theme="light"] .logo-mark span{ color:#0b1220; }
+
+.logo-text{ display:flex; flex-direction:column; }
+.logo-text h1{ margin:0; font-size:20px; letter-spacing:.2px; }
+.logo-text span{ font-size:12px; color:var(--text-muted); }
+
+.header-actions{ display:flex; align-items:center; gap:10px; }
+
+/* =========================================================
+   LAYOUT GRID
+========================================================= */
+.main-layout{
+  display:grid;
+  grid-template-columns: 1fr 1fr 300px;
+  gap:14px;
+}
+
+@media (max-width: 980px){
+  .main-layout{ grid-template-columns:1fr; }
+}
+
+/* =========================================================
+   PANELS
+========================================================= */
+.panel{
+  background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 86%, transparent));
+  border:1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  box-shadow: var(--shadow-soft);
+}
+[data-theme="light"] .panel{ background: var(--surface); }
+
+.panel-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.panel-title{
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+}
+.panel-sub{
+  margin-top:2px;
+  font-size:12px;
+  color:var(--text-muted);
+}
+
+/* =========================================================
+   ROWS / GROUPS
+========================================================= */
+.field-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.field-group{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.inline-buttons{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+textarea{
+  width:100%;
+  min-height:180px;
+  padding:12px;
+  border-radius: var(--radius);
+  border:1px solid var(--border-strong);
+  background: var(--surface-alt);
+  color: var(--text);
+  resize:vertical;
+  outline:none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+textarea::placeholder{ color: color-mix(in srgb, var(--text-muted) 85%, transparent); }
+textarea:focus{
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+select{
+  padding:7px 12px;
+  border-radius:999px;
+  border:1px solid var(--border-strong);
+  background: var(--surface-alt);
+  color: var(--text);
+  outline:none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+select:focus{
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.char-count{
+  font-size:12px;
+  color:var(--text-muted);
+}
+
+/* =========================================================
+   OUTPUT BOX
+========================================================= */
+.output-box{
+  min-height:180px;
+  padding:12px;
+  border-radius: var(--radius);
+  border:1px solid var(--border-strong);
+  background: var(--surface-alt);
+  color: var(--text);
+  white-space: pre-wrap;
+}
+.output-placeholder{ color:var(--text-muted); }
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+.btn, .btn-sm, .btn-ghost{ font-family:inherit; }
+
+.btn{
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid transparent;
+  background: var(--accent);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+  box-shadow: 0 10px 26px rgba(37,99,235,.22);
+}
+.btn:hover{ filter: brightness(1.05); transform: translateY(-1px); }
+.btn:active{ transform: translateY(0); }
+.btn:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.btn-sm{
+  padding:7px 12px;
+  border-radius:999px;
+  border:1px solid var(--border-strong);
+  background: var(--surface-alt);
+  color: var(--text);
+  cursor:pointer;
+  transition: background .12s ease, transform .12s ease, border-color .12s ease;
+}
+.btn-sm:hover{
+  background: color-mix(in srgb, var(--surface-alt) 80%, var(--accent-soft));
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-strong));
+  transform: translateY(-1px);
+}
+
+.btn-ghost{
+  padding:8px 14px;
+  border-radius:999px;
+  background: transparent;
+  border:1px solid var(--border-strong);
+  color: var(--text);
+  cursor:pointer;
+  transition: background .12s ease, transform .12s ease;
+}
+.btn-ghost:hover{
+  background: color-mix(in srgb, var(--surface-alt) 55%, transparent);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   BADGES / TAGS
+========================================================= */
+.badge, .tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  padding:6px 10px;
+  border:1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-alt) 78%, transparent);
+  color: var(--text-muted);
+  font-size:12px;
+}
+.badge{ padding:6px 12px; }
+
+.tag{
+  border-color: transparent;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight:600;
+  font-size:11px;
+}
+
+/* =========================================================
+   STATUS TEXT
+========================================================= */
+.status-text{ font-size:12px; color: var(--text-muted); }
+.error-text{ font-size:12px; color: var(--danger); min-height: 14px; }
+
+/* =========================================================
+   HISTORY
+========================================================= */
+.history-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:320px;
+  overflow:auto;
+  padding-right:2px;
+}
+.history-empty{ font-size:12px; color: var(--text-muted); }
+
+.history-item{
+  border:1px solid var(--border);
+  background: var(--surface-alt);
+  border-radius: 14px;
+  padding:10px;
+  cursor:pointer;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.history-item:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface-alt) 78%, var(--accent-soft));
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+.history-top{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:12px;
+}
+.history-langs, .history-time{ color: var(--text-muted); }
+.history-snippet{
+  margin-top:6px;
+  font-size:12px;
+  color: var(--text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
+/* =========================================================
+   SETTINGS AREA
+========================================================= */
+.settings-row{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.settings-row > label{ font-size:12px; color: var(--text-muted); }
+.settings-inline{
+  display:flex;
+  gap:12px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+
+/* =========================================================
+   TOGGLE SWITCH
+========================================================= */
+.toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  user-select:none;
+  font-size:12px;
+  color: var(--text-muted);
+}
+.toggle-input{
+  appearance:none;
+  width:42px;
+  height:22px;
+  border-radius:999px;
+  background: color-mix(in srgb, var(--text-muted) 55%, transparent);
+  border:1px solid var(--border);
+  position:relative;
+  cursor:pointer;
+  transition: background .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.toggle-input::after{
+  content:"";
+  position:absolute;
+  top:2px;
+  left:2px;
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  background: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+  transition: transform .15s ease;
+}
+.toggle-input:checked{
+  background: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.toggle-input:checked::after{ transform: translateX(20px); }
+
+/* =========================================================
+   MODAL
+========================================================= */
+.overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,.55);
+  z-index:50;
+}
+.overlay.visible{ display:flex; }
+
+.modal{
+  width: 520px;
+  max-width: 92vw;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.modal-title{ font-weight:700; font-size:14px; color: var(--text); }
+.modal-body{
+  font-size:13px;
+  color: var(--text);
+  max-height: 360px;
+  overflow:auto;
+  white-space: pre-wrap;
+}
+.modal-close{
+  border:none;
+  background:transparent;
+  color: var(--text-muted);
+  cursor:pointer;
+  font-size:22px;
+  line-height:1;
+  padding:2px 6px;
+}
+.modal-close:hover{ color: var(--text); }
+
+/* =========================================================
+   GOOGLE-LIKE TTS (speaker inside boxes)
+========================================================= */
+.tts-wrap{ position:relative; }
+
+.tts-btn{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  width:38px;
+  height:38px;
+  border-radius:999px;
+  border:1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--surface-alt) 75%, transparent);
+  color: var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  user-select:none;
+}
+
+.tts-btn:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-strong));
+  background: color-mix(in srgb, var(--surface-alt) 65%, var(--accent-soft));
+}
+
+.tts-btn.playing{
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border-strong));
+}
+
+.tts-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+  </style>
+</head>
+
+<body data-theme="dark">
+  <div class="app-shell">
+    <header>
+      <div class="logo">
+        <div class="logo-mark"><span>Lx</span></div>
+        <div class="logo-text">
+          <h1>Linguo</h1>
+          <span>Instant translations with AI</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-ghost">Toggle Theme</button>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <!-- INPUT PANEL -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Input</div>
+            <div class="panel-sub">Paste any text you want translated</div>
+          </div>
+          <span class="badge" id="styleBadge">Style: Formal</span>
+        </div>
+
+        <div class="tts-wrap">
+          <textarea id="inputText" placeholder="Type or paste text to translate..."></textarea>
+          <button id="ttsInputBtn" class="tts-btn" title="Listen to input" aria-label="Listen to input">🔊</button>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label style="font-size:12px;color:var(--text-muted);">From:</label>
+            <select id="sourceLang">
+              <option value="auto">Auto-detect</option>
+              <option value="English">English</option>
+              <option value="Swahili">Swahili</option>
+              <option value="Arabic">Arabic</option>
+              <option value="Mandarin Chinese (Simplified)">Mandarin Chinese (Simplified)</option>
+              <option value="Mandarin Chinese (Traditional)">Mandarin Chinese (Traditional)</option>
+              <option value="Spanish">Spanish</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Portuguese">Portuguese</option>
+              <option value="Russian">Russian</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="German">German</option>
+              <option value="Javanese">Javanese</option>
+              <option value="Korean">Korean</option>
+              <option value="French">French</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Turkish">Turkish</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Vietnamese">Vietnamese</option>
+              <option value="Italian">Italian</option>
+              <option value="Urdu">Urdu</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Persian (Farsi)">Persian (Farsi)</option>
+              <option value="Polish">Polish</option>
+              <option value="Ukrainian">Ukrainian</option>
+              <option value="Romanian">Romanian</option>
+              <option value="Dutch">Dutch</option>
+              <option value="Greek">Greek</option>
+              <option value="Czech">Czech</option>
+              <option value="Hungarian">Hungarian</option>
+              <option value="Swedish">Swedish</option>
+              <option value="Bulgarian">Bulgarian</option>
+              <option value="Danish">Danish</option>
+              <option value="Finnish">Finnish</option>
+              <option value="Norwegian">Norwegian</option>
+              <option value="Hebrew">Hebrew</option>
+              <option value="Malay">Malay</option>
+              <option value="Indonesian">Indonesian</option>
+              <option value="Thai">Thai</option>
+              <option value="Lao">Lao</option>
+              <option value="Burmese (Myanmar)">Burmese (Myanmar)</option>
+              <option value="Khmer (Cambodian)">Khmer (Cambodian)</option>
+              <option value="Sinhala">Sinhala</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Azerbaijani">Azerbaijani</option>
+              <option value="Amharic">Amharic</option>
+              <option value="Yoruba">Yoruba</option>
+              <option value="Igbo">Igbo</option>
+              <option value="Hausa">Hausa</option>
+              <option value="Somali">Somali</option>
+              <option value="Zulu">Zulu</option>
+              <option value="Xhosa">Xhosa</option>
+              <option value="Latvian">Latvian</option>
+              <option value="Lithuanian">Lithuanian</option>
+              <option value="Estonian">Estonian</option>
+              <option value="Icelandic">Icelandic</option>
+              <option value="Maltese">Maltese</option>
+              <option value="Albanian">Albanian</option>
+              <option value="Bosnian">Bosnian</option>
+              <option value="Croatian">Croatian</option>
+              <option value="Serbian">Serbian</option>
+              <option value="Macedonian">Macedonian</option>
+              <option value="Slovenian">Slovenian</option>
+              <option value="Slovak">Slovak</option>
+              <option value="Belarusian">Belarusian</option>
+              <option value="Catalan">Catalan</option>
+              <option value="Galician">Galician</option>
+              <option value="Basque">Basque</option>
+              <option value="Haitian Creole">Haitian Creole</option>
+              <option value="Georgian">Georgian</option>
+              <option value="Armenian">Armenian</option>
+              <option value="Uzbek">Uzbek</option>
+              <option value="Kazakh">Kazakh</option>
+              <option value="Kyrgyz">Kyrgyz</option>
+              <option value="Tajik">Tajik</option>
+              <option value="Turkmen">Turkmen</option>
+              <option value="Pashto">Pashto</option>
+              <option value="Kurdish (Kurmanji)">Kurdish (Kurmanji)</option>
+              <option value="Kurdish (Sorani)">Kurdish (Sorani)</option>
+              <option value="Mongolian">Mongolian</option>
+              <option value="Tibetan">Tibetan</option>
+              <option value="Tagalog (Filipino)">Tagalog (Filipino)</option>
+              <option value="Cebuano">Cebuano</option>
+              <option value="Hmong">Hmong</option>
+              <option value="Malagasy">Malagasy</option>
+              <option value="Maori">Maori</option>
+              <option value="Samoan">Samoan</option>
+              <option value="Tongan">Tongan</option>
+              <option value="Fijian">Fijian</option>
+              <option value="Luxembourgish">Luxembourgish</option>
+              <option value="Yiddish">Yiddish</option>
+              <option value="Odia (Oriya)">Odia (Oriya)</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Sindhi">Sindhi</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Breton">Breton</option>
+              <option value="Corsican">Corsican</option>
+              <option value="Navajo">Navajo</option>
+            </select>
+
+            <select id="targetLang">
+              <option value="English" selected>English</option>
+              <option value="Swahili">Swahili</option>
+              <option value="Arabic">Arabic</option>
+              <option value="Mandarin Chinese (Simplified)">Mandarin Chinese (Simplified)</option>
+              <option value="Mandarin Chinese (Traditional)">Mandarin Chinese (Traditional)</option>
+              <option value="Spanish">Spanish</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Portuguese">Portuguese</option>
+              <option value="Russian">Russian</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="German">German</option>
+              <option value="Javanese">Javanese</option>
+              <option value="Korean">Korean</option>
+              <option value="French">French</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Turkish">Turkish</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Vietnamese">Vietnamese</option>
+              <option value="Italian">Italian</option>
+              <option value="Urdu">Urdu</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Persian (Farsi)">Persian (Farsi)</option>
+              <option value="Polish">Polish</option>
+              <option value="Ukrainian">Ukrainian</option>
+              <option value="Romanian">Romanian</option>
+              <option value="Dutch">Dutch</option>
+              <option value="Greek">Greek</option>
+              <option value="Czech">Czech</option>
+              <option value="Hungarian">Hungarian</option>
+              <option value="Swedish">Swedish</option>
+              <option value="Bulgarian">Bulgarian</option>
+              <option value="Danish">Danish</option>
+              <option value="Finnish">Finnish</option>
+              <option value="Norwegian">Norwegian</option>
+              <option value="Hebrew">Hebrew</option>
+              <option value="Malay">Malay</option>
+              <option value="Indonesian">Indonesian</option>
+              <option value="Thai">Thai</option>
+              <option value="Lao">Lao</option>
+              <option value="Burmese (Myanmar)">Burmese (Myanmar)</option>
+              <option value="Khmer (Cambodian)">Khmer (Cambodian)</option>
+              <option value="Sinhala">Sinhala</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Azerbaijani">Azerbaijani</option>
+              <option value="Amharic">Amharic</option>
+              <option value="Yoruba">Yoruba</option>
+              <option value="Igbo">Igbo</option>
+              <option value="Hausa">Hausa</option>
+              <option value="Somali">Somali</option>
+              <option value="Zulu">Zulu</option>
+              <option value="Xhosa">Xhosa</option>
+              <option value="Latvian">Latvian</option>
+              <option value="Lithuanian">Lithuanian</option>
+              <option value="Estonian">Estonian</option>
+              <option value="Icelandic">Icelandic</option>
+              <option value="Maltese">Maltese</option>
+              <option value="Albanian">Albanian</option>
+              <option value="Bosnian">Bosnian</option>
+              <option value="Croatian">Croatian</option>
+              <option value="Serbian">Serbian</option>
+              <option value="Macedonian">Macedonian</option>
+              <option value="Slovenian">Slovenian</option>
+              <option value="Slovak">Slovak</option>
+              <option value="Belarusian">Belarusian</option>
+              <option value="Catalan">Catalan</option>
+              <option value="Galician">Galician</option>
+              <option value="Basque">Basque</option>
+              <option value="Haitian Creole">Haitian Creole</option>
+              <option value="Georgian">Georgian</option>
+              <option value="Armenian">Armenian</option>
+              <option value="Uzbek">Uzbek</option>
+              <option value="Kazakh">Kazakh</option>
+              <option value="Kyrgyz">Kyrgyz</option>
+              <option value="Tajik">Tajik</option>
+              <option value="Turkmen">Turkmen</option>
+              <option value="Pashto">Pashto</option>
+              <option value="Kurdish (Kurmanji)">Kurdish (Kurmanji)</option>
+              <option value="Kurdish (Sorani)">Kurdish (Sorani)</option>
+              <option value="Mongolian">Mongolian</option>
+              <option value="Tibetan">Tibetan</option>
+              <option value="Tagalog (Filipino)">Tagalog (Filipino)</option>
+              <option value="Cebuano">Cebuano</option>
+              <option value="Hmong">Hmong</option>
+              <option value="Malagasy">Malagasy</option>
+              <option value="Maori">Maori</option>
+              <option value="Samoan">Samoan</option>
+              <option value="Tongan">Tongan</option>
+              <option value="Fijian">Fijian</option>
+              <option value="Luxembourgish">Luxembourgish</option>
+              <option value="Yiddish">Yiddish</option>
+              <option value="Odia (Oriya)">Odia (Oriya)</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Sindhi">Sindhi</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Breton">Breton</option>
+              <option value="Corsican">Corsican</option>
+              <option value="Navajo">Navajo</option>
+            </select>
+          </div>
+
+          <div class="char-count" id="charCount">0 chars</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="toggle">
+              <input id="autoDetectToggle" type="checkbox" class="toggle-input" checked />
+              <span>Auto-detect language</span>
+            </label>
+
+            <select id="styleSelect">
+              <option value="formal">Formal</option>
+              <option value="informal">Informal</option>
+              <option value="literal">Literal</option>
+              <option value="creative">Creative</option>
+            </select>
+
+            <select id="engineSelect">
+              <option value="ai" selected>AI (Groq)</option>
+              <option value="basic">Regular (Free)</option>
+            </select>
+          </div>
+
+          <button id="translateBtn" class="btn">⚡ Translate</button>
+        </div>
+
+        <div class="status-text" id="statusText">Ready.</div>
+        <div class="error-text" id="errorText"></div>
+      </section>
+
+      <!-- OUTPUT PANEL -->
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Output</div>
+            <div class="panel-sub" id="outputSub">Translation result</div>
+          </div>
+          <div class="inline-buttons">
+            <button id="copyBtn" class="btn-sm">Copy</button>
+            <button id="explainBtn" class="btn-sm">Explain</button>
+          </div>
+        </div>
+
+        <div class="tts-wrap">
+          <div id="outputBox" class="output-box">
+            <span class="output-placeholder">Your translation will appear here.</span>
+          </div>
+          <button id="ttsOutputBtn" class="tts-btn" title="Listen to translation" aria-label="Listen to translation">🔊</button>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <button id="clearBtn" class="btn-sm">Clear</button>
+            <button id="swapBtn" class="btn-sm">Swap Languages</button>
+          </div>
+          <div class="field-group">
+            <span class="tag">History autosaves locally</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORY & SETTINGS -->
+      <aside class="panel history-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">History</div>
+            <div class="panel-sub">Latest translations on this device</div>
+          </div>
+          <div class="inline-buttons">
+            <button id="clearHistoryBtn" class="btn-sm">Clear</button>
+          </div>
+        </div>
+
+        <div id="historyList" class="history-list"></div>
+        <div id="historyEmpty" class="history-empty">No history yet.</div>
+
+        <div class="settings-row">
+          <label>Quick Settings</label>
+          <div class="settings-inline">
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-size:12px;">Default style</span>
+              <select id="settingsStyle">
+                <option value="formal">Formal</option>
+                <option value="informal">Informal</option>
+                <option value="literal">Literal</option>
+                <option value="creative">Creative</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-size:12px;">Theme</span>
+              <button id="settingsTheme" class="btn-sm">System / Toggle</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Explanation Modal -->
+  <div id="overlay" class="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Translation Explanation</div>
+        <button id="modalCloseBtn" class="modal-close">&times;</button>
+      </div>
+      <div id="modalBody" class="modal-body">Loading explanation...</div>
+    </div>
+  </div>
+
+  <script>
+    const inputText = document.getElementById("inputText");
+    const sourceLang = document.getElementById("sourceLang");
+    const targetLang = document.getElementById("targetLang");
+    const autoDetectToggle = document.getElementById("autoDetectToggle");
+    const styleSelect = document.getElementById("styleSelect");
+    const engineSelect = document.getElementById("engineSelect");
+
+    const translateBtn = document.getElementById("translateBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const explainBtn = document.getElementById("explainBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const swapBtn = document.getElementById("swapBtn");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+
+    const statusText = document.getElementById("statusText");
+    const errorText = document.getElementById("errorText");
+    const outputBox = document.getElementById("outputBox");
+    const outputSub = document.getElementById("outputSub");
+    const charCount = document.getElementById("charCount");
+
+    const historyList = document.getElementById("historyList");
+    const historyEmpty = document.getElementById("historyEmpty");
+
+    const styleBadge = document.getElementById("styleBadge");
+    const themeToggle = document.getElementById("themeToggle");
+    const settingsStyle = document.getElementById("settingsStyle");
+    const settingsTheme = document.getElementById("settingsTheme");
+
+    const overlay = document.getElementById("overlay");
+    const modalBody = document.getElementById("modalBody");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+    const ttsInputBtn = document.getElementById("ttsInputBtn");
+    const ttsOutputBtn = document.getElementById("ttsOutputBtn");
+
+    const API_BASE = "";
+
+    const STORAGE_KEYS = {
+      HISTORY: "groqTranslateHistory",
+      SETTINGS: "groqTranslateSettings"
+    };
+
+    let currentTranslation = {
+      original: "",
+      translated: "",
+      sourceLang: "",
+      targetLang: ""
+    };
+
+    function setError(msg) {
+      errorText.textContent = msg || "";
+    }
+
+    function updateCharCount() {
+      charCount.textContent = `${inputText.value.length} chars`;
+    }
+
+    function updateStyleBadge() {
+      const label = {
+        formal: "Formal",
+        informal: "Informal",
+        literal: "Literal",
+        creative: "Creative"
+      }[styleSelect.value] || "Formal";
+      styleBadge.textContent = "Style: " + label;
+    }
+
+    function setLoading(isLoading) {
+      translateBtn.disabled = isLoading;
+      const engineLabel = engineSelect.value === "basic" ? "Regular" : "Groq AI";
+      statusText.textContent = isLoading ? `Translating via ${engineLabel}…` : "Ready.";
+    }
+
+    function renderOutput(text) {
+      outputBox.innerHTML = "";
+      const span = document.createElement("span");
+      span.textContent = (text || "").trim();
+      outputBox.appendChild(span);
+
+      if (!text) {
+        span.className = "output-placeholder";
+        span.textContent = "Your translation will appear here.";
+      }
+    }
+
+    function loadSettings() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+        if (!raw) return;
+        const s = JSON.parse(raw);
+        if (s.style) {
+          styleSelect.value = s.style;
+          settingsStyle.value = s.style;
+          updateStyleBadge();
+        }
+        if (s.theme) {
+          document.body.setAttribute("data-theme", s.theme);
+        }
+      } catch {}
+    }
+
+    function saveSettings() {
+      const s = {
+        style: styleSelect.value,
+        theme: document.body.getAttribute("data-theme") || "dark"
+      };
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(s));
+    }
+
+    function loadHistory() {
+      historyList.innerHTML = "";
+      let history = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.HISTORY);
+        if (raw) history = JSON.parse(raw);
+      } catch {}
+
+      if (!history.length) {
+        historyEmpty.style.display = "block";
+        return;
+      }
+      historyEmpty.style.display = "none";
+
+      history.slice().reverse().forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.innerHTML = `
+          <div class="history-top">
+            <span class="history-langs">${item.sourceLang || "Auto"} → ${item.targetLang}</span>
+            <span class="history-time">${new Date(item.timestamp).toLocaleTimeString()}</span>
+          </div>
+          <div class="history-snippet">${(item.original || "").slice(0, 120) || "(empty)"}</div>
+        `;
+
+        div.addEventListener("click", () => {
+          stopAllSpeech();
+          inputText.value = item.original || "";
+          updateCharCount();
+          targetLang.value = item.targetLang || "English";
+          sourceLang.value = item.sourceLang || "auto";
+          styleSelect.value = item.style || "formal";
+          engineSelect.value = item.engine || "ai";
+          syncEngineRules();
+          updateStyleBadge();
+          renderOutput(item.translated || "");
+          currentTranslation = {
+            original: item.original || "",
+            translated: item.translated || "",
+            sourceLang: item.sourceLang || "",
+            targetLang: item.targetLang || ""
+          };
+        });
+
+        historyList.appendChild(div);
+      });
+    }
+
+    function saveToHistory(entry) {
+      let history = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.HISTORY);
+        if (raw) history = JSON.parse(raw);
+      } catch {}
+
+      history.push({ ...entry, timestamp: Date.now() });
+      history = history.slice(-50);
+
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history));
+      loadHistory();
+    }
+
+    function clearHistory() {
+      localStorage.removeItem(STORAGE_KEYS.HISTORY);
+      loadHistory();
+      statusText.textContent = "History cleared.";
+    }
+
+    function toggleTheme() {
+      const cur = document.body.getAttribute("data-theme") || "dark";
+      const next = cur === "dark" ? "light" : "dark";
+      document.body.setAttribute("data-theme", next);
+      saveSettings();
+    }
+
+    function clearAll() {
+      stopAllSpeech();
+      inputText.value = "";
+      currentTranslation = { original: "", translated: "", sourceLang: "", targetLang: "" };
+      renderOutput("");
+      updateCharCount();
+      setError("");
+      statusText.textContent = "Cleared.";
+    }
+
+    function swapLanguages() {
+      stopAllSpeech();
+      const tmp = sourceLang.value;
+      sourceLang.value = targetLang.value;
+      targetLang.value = tmp === "auto" ? "English" : tmp;
+      statusText.textContent = "Languages swapped.";
+    }
+
+    function syncEngineRules() {
+      const isRegular = engineSelect.value === "basic";
+
+      if (isRegular) {
+        autoDetectToggle.checked = false;
+        autoDetectToggle.disabled = true;
+
+        // Regular mode requires explicit source language supported by backend map,
+        // but UI-wise we at least prevent "auto".
+        if (sourceLang.value === "auto") sourceLang.value = "English";
+
+        explainBtn.disabled = true;
+        outputSub.textContent = "Regular (free) translation result";
+      } else {
+        autoDetectToggle.disabled = false;
+        explainBtn.disabled = false;
+        outputSub.textContent = "Groq AI translation result";
+      }
+    }
+
+    async function translate() {
+      stopAllSpeech();
+
+      const text = inputText.value.trim();
+      if (!text) {
+        setError("Please enter some text first.");
+        return;
+      }
+
+      setError("");
+      setLoading(true);
+
+      const body = {
+        text,
+        sourceLang: autoDetectToggle.checked ? "auto" : sourceLang.value,
+        targetLang: targetLang.value,
+        style: styleSelect.value
+      };
+
+      try {
+        const endpoint = engineSelect.value === "basic" ? "/api/translate-basic" : "/api/translate";
+
+        const res = await fetch(API_BASE + endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          throw new Error(data.error || "Unknown error");
+        }
+
+        const translated = (data.translatedText || "").trim();
+        renderOutput(translated);
+
+        currentTranslation = {
+          original: text,
+          translated,
+          sourceLang: body.sourceLang === "auto" ? "" : body.sourceLang,
+          targetLang: body.targetLang
+        };
+
+        saveToHistory({
+          ...currentTranslation,
+          style: body.style,
+          engine: engineSelect.value
+        });
+
+        statusText.textContent = "Done ✔";
+      } catch (e) {
+        console.error(e);
+        setError("Translation failed: " + e.message);
+        statusText.textContent = "Error.";
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function explain() {
+      if (engineSelect.value === "basic") {
+        setError("Explain is available only in AI mode.");
+        return;
+      }
+
+      if (!currentTranslation.original || !currentTranslation.translated) {
+        setError("Translate something first, then ask for an explanation.");
+        return;
+      }
+
+      setError("");
+      overlay.classList.add("visible");
+      modalBody.textContent = "Asking Groq to explain the translation…";
+
+      try {
+        const res = await fetch(API_BASE + "/api/explain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            originalText: currentTranslation.original,
+            translatedText: currentTranslation.translated,
+            sourceLang: currentTranslation.sourceLang,
+            targetLang: currentTranslation.targetLang
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || data.error) throw new Error(data.error || "Unknown error");
+
+        modalBody.textContent = data.explanation || "(No explanation returned.)";
+      } catch (e) {
+        modalBody.textContent = "Explanation failed: " + e.message;
+      }
+    }
+
+    function hideModal() {
+      overlay.classList.remove("visible");
+    }
+
+    async function copyOutput() {
+      const text = (currentTranslation.translated || "").trim();
+      if (!text) {
+        setError("Nothing to copy.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        statusText.textContent = "Copied to clipboard.";
+      } catch (e) {
+        setError("Failed to copy: " + e.message);
+      }
+    }
+
+    // =========================================================
+    // GOOGLE-LIKE TTS (Play/Pause inside boxes)
+    // =========================================================
+    let voices = [];
+    let active = null; // "input" | "output"
+    let isPaused = false;
+
+    function loadVoices() {
+      voices = window.speechSynthesis.getVoices() || [];
+    }
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    function langToBCP47(label) {
+      const map = {
+        English: "en",
+        Turkish: "tr",
+        Swahili: "sw",
+        Arabic: "ar",
+        Spanish: "es",
+        French: "fr",
+        German: "de",
+        Portuguese: "pt",
+        Russian: "ru",
+        Italian: "it",
+        Dutch: "nl",
+        Polish: "pl",
+        Ukrainian: "uk",
+        Greek: "el",
+        Hebrew: "he",
+        Hindi: "hi",
+        Japanese: "ja",
+        Korean: "ko",
+        Vietnamese: "vi",
+        Thai: "th",
+        Indonesian: "id",
+        Malay: "ms",
+        Swedish: "sv",
+        Norwegian: "no",
+        Danish: "da",
+        Finnish: "fi",
+        Czech: "cs",
+        Hungarian: "hu",
+        Romanian: "ro",
+        Bulgarian: "bg"
+      };
+      if (label?.startsWith("Mandarin Chinese")) return "zh";
+      return map[label] || "en";
+    }
+
+    function pickVoice(langCode) {
+      if (!voices.length) loadVoices();
+      const lc = (langCode || "en").toLowerCase();
+      const exact = voices.find(v => (v.lang || "").toLowerCase() === lc);
+      if (exact) return exact;
+      const base = lc.split("-")[0];
+      return voices.find(v => (v.lang || "").toLowerCase().startsWith(base)) || null;
+    }
+
+    function setTtsUi() {
+      const setBtn = (btn, playing, paused) => {
+        btn.classList.toggle("playing", playing);
+        btn.textContent = playing ? (paused ? "▶" : "⏸") : "🔊";
+        btn.title = playing ? (paused ? "Resume" : "Pause") : "Listen";
+      };
+      setBtn(ttsInputBtn, active === "input", isPaused && active === "input");
+      setBtn(ttsOutputBtn, active === "output", isPaused && active === "output");
+    }
+
+    function stopAllSpeech() {
+      window.speechSynthesis.cancel();
+      active = null;
+      isPaused = false;
+      setTtsUi();
+    }
+
+    function speak(key) {
+      const text =
+        key === "input"
+          ? (inputText.value || "").trim()
+          : (currentTranslation.translated || outputBox.textContent || "").trim();
+
+      if (!text) {
+        setError("Nothing to speak.");
+        return;
+      }
+      setError("");
+
+      window.speechSynthesis.cancel();
+      isPaused = false;
+      active = key;
+
+      const langLabel =
+        key === "input"
+          ? (autoDetectToggle.checked ? "English" : sourceLang.value) // best effort
+          : targetLang.value;
+
+      const langCode = langToBCP47(langLabel);
+
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = langCode;
+
+      const voice = pickVoice(langCode);
+      if (voice) u.voice = voice;
+
+      u.onend = () => {
+        active = null;
+        isPaused = false;
+        setTtsUi();
+      };
+      u.onerror = () => {
+        active = null;
+        isPaused = false;
+        setTtsUi();
+        setError("Voice output failed in this browser.");
+      };
+
+      setTtsUi();
+      window.speechSynthesis.speak(u);
+    }
+
+    function toggleSpeech(key) {
+      if (active === key) {
+        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+          window.speechSynthesis.pause();
+          isPaused = true;
+        } else if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+          isPaused = false;
+        } else {
+          speak(key);
+          return;
+        }
+        setTtsUi();
+        return;
+      }
+      speak(key);
+    }
+
+    // stop speaking input if user edits it
+    inputText.addEventListener("input", () => {
+      updateCharCount();
+      if (active === "input") stopAllSpeech();
+    });
+
+    // =========================================================
+    // EVENTS
+    // =========================================================
+    styleSelect.addEventListener("change", () => {
+      updateStyleBadge();
+      saveSettings();
+    });
+
+    translateBtn.addEventListener("click", translate);
+    explainBtn.addEventListener("click", explain);
+    copyBtn.addEventListener("click", copyOutput);
+    clearBtn.addEventListener("click", clearAll);
+    swapBtn.addEventListener("click", swapLanguages);
+    clearHistoryBtn.addEventListener("click", clearHistory);
+
+    themeToggle.addEventListener("click", toggleTheme);
+    settingsTheme.addEventListener("click", toggleTheme);
+    settingsStyle.addEventListener("change", () => {
+      styleSelect.value = settingsStyle.value;
+      updateStyleBadge();
+      saveSettings();
+    });
+
+    engineSelect.addEventListener("change", () => {
+      stopAllSpeech();
+      syncEngineRules();
+    });
+
+    ttsInputBtn.addEventListener("click", () => toggleSpeech("input"));
+    ttsOutputBtn.addEventListener("click", () => toggleSpeech("output"));
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) hideModal();
+    });
+    modalCloseBtn.addEventListener("click", hideModal);
+
+    // INIT
+    loadSettings();
+    loadHistory();
+    updateCharCount();
+    updateStyleBadge();
+    syncEngineRules();
+    setTtsUi();
+  </script>
+</body>
+</html>
